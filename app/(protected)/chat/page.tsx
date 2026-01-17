@@ -13,6 +13,7 @@ import {
   Sparkles,
   BookOpen,
   Shield,
+  Database,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/hooks/use-toast'
@@ -29,12 +30,13 @@ export default function ChatPage() {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingHistory, setIsLoadingHistory] = useState(true)
-  const [includeKnowledge, setIncludeKnowledge] = useState(true)
+  const [knowledgeCount, setKnowledgeCount] = useState(0)
   const scrollRef = useRef<HTMLDivElement>(null)
   const { toast } = useToast()
 
   useEffect(() => {
     fetchMessages()
+    fetchKnowledgeCount()
   }, [])
 
   useEffect(() => {
@@ -58,6 +60,18 @@ export default function ChatPage() {
     }
   }
 
+  const fetchKnowledgeCount = async () => {
+    try {
+      const res = await fetch('/api/knowledge')
+      const data = await res.json()
+      if (data.knowledge) {
+        setKnowledgeCount(data.knowledge.length)
+      }
+    } catch (error) {
+      console.error('Error fetching knowledge count:', error)
+    }
+  }
+
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return
 
@@ -77,7 +91,7 @@ export default function ChatPage() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage, includeKnowledge }),
+        body: JSON.stringify({ message: userMessage, includeKnowledge: true }),
       })
 
       const data = await res.json()
@@ -144,20 +158,11 @@ export default function ChatPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              className={cn(
-                'h-10 px-4 rounded-xl border-2 transition-all',
-                includeKnowledge
-                  ? 'bg-orange-50 text-orange-600 border-orange-200 hover:bg-orange-100'
-                  : 'text-gray-500 border-gray-200 hover:bg-gray-50'
-              )}
-              onClick={() => setIncludeKnowledge(!includeKnowledge)}
-            >
-              <BookOpen className="h-4 w-4 mr-2" />
-              Bilgi Tabani
-            </Button>
+            <div className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 border border-orange-200 rounded-xl">
+              <Database className="h-4 w-4" />
+              <span className="text-sm font-medium">Bilgi Tabani Aktif</span>
+              <span className="text-xs bg-orange-500 text-white px-2 py-0.5 rounded-full">{knowledgeCount}</span>
+            </div>
             <Button
               variant="outline"
               size="sm"
@@ -187,26 +192,24 @@ export default function ChatPage() {
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
                   GBrain AI Asistani
                 </h2>
-                <p className="text-gray-500 max-w-md mx-auto">
+                <p className="text-gray-500 max-w-md mx-auto mb-6">
                   Siber guvenlik, zafiyet analizi ve web guvenligi konularinda size yardimci olmak icin buradayim.
                 </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-                {[
-                  { icon: '🔍', text: 'OWASP Top 10 hakkinda bilgi ver' },
-                  { icon: '💉', text: 'SQL Injection nasil tespit edilir?' },
-                  { icon: '🛡️', text: 'XSS turleri nelerdir?' },
-                  { icon: '🔐', text: 'JWT token guvenligi nasil saglanir?' },
-                ].map((suggestion) => (
-                  <button
-                    key={suggestion.text}
-                    onClick={() => setInput(suggestion.text)}
-                    className="flex items-center gap-3 p-4 rounded-xl bg-white border border-gray-200 text-left hover:border-orange-300 hover:shadow-md hover:shadow-orange-500/10 transition-all group"
-                  >
-                    <span className="text-2xl">{suggestion.icon}</span>
-                    <span className="text-gray-700 group-hover:text-gray-900">{suggestion.text}</span>
-                  </button>
-                ))}
+
+                {/* Knowledge Base Info */}
+                <div className="inline-flex items-center gap-3 px-6 py-4 bg-white rounded-2xl shadow-sm border border-gray-200">
+                  <div className="p-2 bg-orange-100 rounded-xl">
+                    <BookOpen className="h-5 w-5 text-orange-600" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-gray-800">Bilgi Tabani Baglantisl</p>
+                    <p className="text-xs text-gray-500">
+                      {knowledgeCount > 0
+                        ? `${knowledgeCount} dokuman yuklendi - sorulariniza gore ilgili bilgiler cekiliyor`
+                        : 'Henuz dokuman yok - Bilgi Tabani sayfasindan dokuman ekleyin'}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           ) : (
@@ -253,7 +256,7 @@ export default function ChatPage() {
               <div className="bg-white border border-gray-200 rounded-2xl px-5 py-4 shadow-sm">
                 <div className="flex items-center gap-2">
                   <Loader2 className="h-5 w-5 animate-spin text-orange-500" />
-                  <span className="text-gray-500">Dusunuyor...</span>
+                  <span className="text-gray-500">Bilgi tabani taranıyor ve yanıt hazırlanıyor...</span>
                 </div>
               </div>
             </div>
@@ -288,7 +291,7 @@ export default function ChatPage() {
             </Button>
           </div>
           <p className="text-center text-xs text-gray-400 mt-3">
-            GBrain siber guvenlik konularinda yardimci olmak icin tasarlanmistir.
+            Bilgi tabanindan ilgili icerikler otomatik olarak sorgunuza eklenir.
           </p>
         </div>
       </div>
