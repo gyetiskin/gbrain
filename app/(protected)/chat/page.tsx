@@ -28,6 +28,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true)
   const [includeKnowledge, setIncludeKnowledge] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
   const { toast } = useToast()
@@ -44,13 +45,16 @@ export default function ChatPage() {
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch('/api/chat')
+      setIsLoadingHistory(true)
+      const res = await fetch('/api/chat?limit=200')
       const data = await res.json()
       if (data.messages) {
         setMessages(data.messages)
       }
     } catch (error) {
       console.error('Error fetching messages:', error)
+    } finally {
+      setIsLoadingHistory(false)
     }
   }
 
@@ -171,7 +175,12 @@ export default function ChatPage() {
 
       <ScrollArea className="flex-1 p-4" ref={scrollRef}>
         <div className="max-w-3xl mx-auto space-y-4">
-          {messages.length === 0 ? (
+          {isLoadingHistory ? (
+            <div className="text-center py-12">
+              <Loader2 className="h-12 w-12 text-emerald-500 mx-auto mb-4 animate-spin" />
+              <p className="text-slate-400">Sohbet gecmisi yukleniyor...</p>
+            </div>
+          ) : messages.length === 0 ? (
             <div className="text-center py-12">
               <Bot className="h-16 w-16 text-slate-600 mx-auto mb-4" />
               <h2 className="text-xl font-semibold text-slate-300 mb-2">

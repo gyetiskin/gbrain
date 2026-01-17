@@ -1,9 +1,11 @@
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import { prisma } from './db'
 
 // Hardcoded admin credentials
 const ADMIN_USERNAME = 'admin'
 const ADMIN_PASSWORD = 'admin'
+const ADMIN_ID = 'admin-user-id'
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -20,8 +22,23 @@ export const authOptions: NextAuthOptions = {
 
         // Check hardcoded credentials
         if (credentials.username === ADMIN_USERNAME && credentials.password === ADMIN_PASSWORD) {
+          // Ensure admin user exists in database
+          const existingUser = await prisma.user.findUnique({
+            where: { id: ADMIN_ID }
+          })
+
+          if (!existingUser) {
+            await prisma.user.create({
+              data: {
+                id: ADMIN_ID,
+                email: 'admin@gbrain.local',
+                name: 'Admin',
+              }
+            })
+          }
+
           return {
-            id: '1',
+            id: ADMIN_ID,
             name: 'Admin',
             email: 'admin@gbrain.local',
           }

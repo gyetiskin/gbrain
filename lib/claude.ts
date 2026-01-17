@@ -26,43 +26,80 @@ export interface Vulnerability {
   owaspCategory?: string
 }
 
-const SECURITY_SYSTEM_PROMPT = `You are GBrain, an expert cybersecurity AI assistant specializing in web application security, penetration testing, and vulnerability assessment. You have deep knowledge of:
+const SECURITY_SYSTEM_PROMPT = `Sen GBrain, siber guvenlik konusunda uzman bir AI asistanisın. Web uygulama guvenligi, penetrasyon testi ve zafiyet degerlendirmesi konularinda derin bilgiye sahipsin.
 
-- OWASP Top 10 vulnerabilities
-- HTTP protocol and web security
-- SQL injection, XSS, CSRF, SSRF, and other web vulnerabilities
-- Authentication and authorization flaws
-- API security testing
-- Burp Suite and other security tools
-- Secure coding practices
+UZMANLIK ALANLARIN:
+- OWASP Top 10 zafiyetleri
+- HTTP protokolu ve web guvenligi
+- SQL injection, XSS, CSRF, SSRF ve diger web zafiyetleri
+- Kimlik dogrulama ve yetkilendirme açıkları
+- API guvenlik testleri
+- Burp Suite ve diger guvenlik araclari
+- Guvenli kodlama pratikleri
+- Network guvenligi ve sizma testleri
 
-When analyzing HTTP requests/responses:
-1. Identify potential security vulnerabilities
-2. Explain the risk and impact
-3. Provide specific remediation steps
-4. Reference relevant OWASP categories
-5. Consider the context from the knowledge base
+ONEMLI KURALLAR:
+1. Kullanici ile yaptigin TUM konuşmalari HATIRLA
+2. Onceki konuşmalarda bahsedilen projeler, sistemler, zafiyetler hakkinda bilgi ver
+3. Kullanici bir sey sorduğunda, onceki konuşmalardan ilgili bilgileri çek ve "Daha once bunlardan bahsetmistik..." diye hatırlat
+4. Kullanicinin bilgi tabanindaki dokumanlari da dikkate al
+5. Yaratici oneriler sun: "Bu durumda sunlari yapabiliriz..." diye secenekler sun
+6. Her zaman Turkce yanit ver
 
-Be thorough but concise. Prioritize findings by severity.`
+HTTP ANALIZI YAPARKEN:
+1. Potansiyel guvenlik zafiyetlerini tespit et
+2. Risk ve etkisini acikla
+3. Spesifik cozum adimlari sun
+4. Ilgili OWASP kategorilerini referans goster
+
+Kapsamli ama oz ol. Bulgulari ciddiyet sirasina gore sirala.`
 
 export async function chat(
   messages: Message[],
-  context?: string
+  context?: string,
+  conversationSummary?: string
 ): Promise<string> {
   let systemPrompt = SECURITY_SYSTEM_PROMPT
 
+  if (conversationSummary) {
+    systemPrompt += `\n\n--- ONCEKI KONUSMALARINIZIN OZETI ---\n${conversationSummary}\n--- OZET SONU ---`
+  }
+
   if (context) {
-    systemPrompt += `\n\nRelevant context from knowledge base:\n${context}`
+    systemPrompt += `\n\n--- BILGI TABANINDAN ILGILI ICERIK ---\n${context}\n--- ICERIK SONU ---`
   }
 
   const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 4096,
+    model: 'claude-opus-4-5-20250514',
+    max_tokens: 8192,
     system: systemPrompt,
     messages: messages.map(m => ({
       role: m.role,
       content: m.content,
     })),
+  })
+
+  const textContent = response.content.find(c => c.type === 'text')
+  return textContent ? textContent.text : ''
+}
+
+export async function summarizeConversation(messages: Message[]): Promise<string> {
+  if (messages.length < 10) return ''
+
+  const response = await anthropic.messages.create({
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: 2000,
+    messages: [
+      {
+        role: 'user',
+        content: `Asagidaki konusmayi ozetle. Onemli bilgileri, projelerı, zafiyetleri, kullanicinin ilgilendigi konulari ve alinan kararlari belirt. Turkce yaz.
+
+KONUSMA:
+${messages.map(m => `${m.role === 'user' ? 'Kullanici' : 'GBrain'}: ${m.content}`).join('\n\n')}
+
+OZET:`,
+      },
+    ],
   })
 
   const textContent = response.content.find(c => c.type === 'text')
@@ -76,37 +113,37 @@ export async function analyzeRequest(
 ): Promise<AnalysisResult> {
   let systemPrompt = SECURITY_SYSTEM_PROMPT + `
 
-When analyzing, respond in the following JSON format:
+Analiz yaparken asagidaki JSON formatinda yanit ver:
 {
   "vulnerabilities": [
     {
-      "name": "Vulnerability name",
+      "name": "Zafiyet adi",
       "severity": "low|medium|high|critical",
-      "description": "Detailed description",
-      "location": "Where in the request/response",
-      "evidence": "Specific evidence from the request/response",
-      "remediation": "How to fix",
-      "owaspCategory": "OWASP category if applicable"
+      "description": "Detayli aciklama",
+      "location": "Request/response'da nerede",
+      "evidence": "Request/response'dan spesifik kanit",
+      "remediation": "Nasil duzeltilir",
+      "owaspCategory": "Varsa OWASP kategorisi"
     }
   ],
-  "summary": "Brief overall assessment",
+  "summary": "Kisa genel degerlendirme",
   "riskLevel": "low|medium|high|critical",
-  "recommendations": ["List of recommendations"]
+  "recommendations": ["Oneriler listesi"]
 }`
 
   if (context) {
-    systemPrompt += `\n\nRelevant context from knowledge base:\n${context}`
+    systemPrompt += `\n\nBilgi tabanindan ilgili icerik:\n${context}`
   }
 
-  let userMessage = `Analyze this HTTP request for security vulnerabilities:\n\n${request}`
+  let userMessage = `Bu HTTP istegini guvenlik zafiyetleri acisindan analiz et:\n\n${request}`
 
   if (response) {
-    userMessage += `\n\nHTTP Response:\n${response}`
+    userMessage += `\n\nHTTP Yaniti:\n${response}`
   }
 
   const aiResponse = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 4096,
+    model: 'claude-opus-4-5-20250514',
+    max_tokens: 8192,
     system: systemPrompt,
     messages: [{ role: 'user', content: userMessage }],
   })
@@ -143,8 +180,8 @@ export async function analyzeImage(
   prompt?: string
 ): Promise<string> {
   const response = await anthropic.messages.create({
-    model: 'claude-sonnet-4-20250514',
-    max_tokens: 4096,
+    model: 'claude-opus-4-5-20250514',
+    max_tokens: 8192,
     system: SECURITY_SYSTEM_PROMPT,
     messages: [
       {
@@ -160,7 +197,7 @@ export async function analyzeImage(
           },
           {
             type: 'text',
-            text: prompt || 'Extract and analyze all text and security-relevant information from this image. If this is a screenshot of a security tool, vulnerability report, or code, provide detailed analysis.',
+            text: prompt || 'Bu gorseldeki tum metin ve guvenlikle ilgili bilgileri cikar ve analiz et. Eger bu bir guvenlik araci screenshotu, zafiyet raporu veya kod ise detayli analiz yap.',
           },
         ],
       },
@@ -172,15 +209,13 @@ export async function analyzeImage(
 }
 
 export async function generateEmbeddingText(content: string): Promise<string> {
-  // For ChromaDB, we'll use the content directly as it has its own embedding model
-  // But we can use Claude to create a summary for better semantic search
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-20250514',
     max_tokens: 500,
     messages: [
       {
         role: 'user',
-        content: `Create a concise summary of this security-related content for semantic search indexing. Focus on key concepts, vulnerabilities, techniques, and tools mentioned:\n\n${content.slice(0, 8000)}`,
+        content: `Bu guvenlikle ilgili icerigin semantik arama indekslemesi icin kisa bir ozetini olustur. Bahsedilen temel kavramlara, zafiyetlere, tekniklere ve araclara odaklan:\n\n${content.slice(0, 8000)}`,
       },
     ],
   })

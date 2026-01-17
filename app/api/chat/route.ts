@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
-import { chat, Message } from '@/lib/claude'
+import { chat, summarizeConversation, Message } from '@/lib/claude'
 import { searchDocuments } from '@/lib/chroma'
+
+// Store conversation summaries in memory (in production, save to DB)
+const conversationSummaries = new Map<string, string>()
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +15,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const userId = session.user.id
     const { message, includeKnowledge = true } = await request.json()
 
     if (!message) {
@@ -23,26 +27,45 @@ export async function POST(request: NextRequest) {
       data: {
         role: 'user',
         content: message,
-        userId: session.user.id,
+        userId,
       },
     })
 
-    // Get recent chat history
-    const recentMessages = await prisma.chatMessage.findMany({
-      where: { userId: session.user.id },
-      orderBy: { createdAt: 'desc' },
-      take: 20,
+    // Get ALL chat history for full context
+    const allMessages = await prisma.chatMessage.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'asc' },
     })
 
-    const messages: Message[] = recentMessages
-      .reverse()
-      .map(m => ({ role: m.role as 'user' | 'assistant', content: m.content }))
+    // Build messages array - use recent 50 messages directly
+    const recentMessages = allMessages.slice(-50)
+    const messages: Message[] = recentMessages.map(m => ({
+      role: m.role as 'user' | 'assistant',
+      content: m.content,
+    }))
+
+    // If there are older messages, create/use summary
+    let conversationSummary = conversationSummaries.get(userId) || ''
+
+    if (allMessages.length > 50) {
+      const olderMessages = allMessages.slice(0, -50)
+
+      // Update summary periodically (every 20 new messages)
+      if (olderMessages.length % 20 === 0 || !conversationSummary) {
+        const olderMsgs: Message[] = olderMessages.map(m => ({
+          role: m.role as 'user' | 'assistant',
+          content: m.content,
+        }))
+        conversationSummary = await summarizeConversation(olderMsgs)
+        conversationSummaries.set(userId, conversationSummary)
+      }
+    }
 
     // Search knowledge base for context
     let context = ''
     if (includeKnowledge) {
       try {
-        const knowledgeResults = await searchDocuments(message, session.user.id, 3)
+        const knowledgeResults = await searchDocuments(message, userId, 5)
         if (knowledgeResults.length > 0) {
           context = knowledgeResults
             .map(r => `[${r.metadata.title}]\n${r.content}`)
@@ -50,19 +73,18 @@ export async function POST(request: NextRequest) {
         }
       } catch (error) {
         console.error('Knowledge search error:', error)
-        // Continue without knowledge context
       }
     }
 
-    // Get AI response
-    const response = await chat(messages, context)
+    // Get AI response with full context
+    const response = await chat(messages, context, conversationSummary)
 
     // Save assistant message
     await prisma.chatMessage.create({
       data: {
         role: 'assistant',
         content: response,
-        userId: session.user.id,
+        userId,
       },
     })
 
@@ -81,8 +103,9 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const limit = parseInt(searchParams.get('limit') || '50')
+    const limit = parseInt(searchParams.get('limit') || '100')
 
+    // Get all messages (or limited)
     const messages = await prisma.chatMessage.findMany({
       where: { userId: session.user.id },
       orderBy: { createdAt: 'asc' },
@@ -107,6 +130,9 @@ export async function DELETE() {
     await prisma.chatMessage.deleteMany({
       where: { userId: session.user.id },
     })
+
+    // Clear conversation summary
+    conversationSummaries.delete(session.user.id)
 
     return NextResponse.json({ success: true })
   } catch (error) {
