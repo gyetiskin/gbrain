@@ -3,7 +3,7 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { Sidebar } from '@/components/sidebar'
+import { Navbar } from '@/components/navbar'
 import { Loader2 } from 'lucide-react'
 
 export default function ProtectedLayout({
@@ -22,7 +22,7 @@ export default function ProtectedLayout({
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
       </div>
     )
@@ -33,8 +33,8 @@ export default function ProtectedLayout({
   }
 
   return (
-    <div className="min-h-screen bg-white flex">
-      <Sidebar />
+    <div className="min-h-screen bg-zinc-950 flex flex-col">
+      <Navbar />
       <main className="flex-1 overflow-auto">{children}</main>
     </div>
   )

@@ -42,43 +42,41 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex bg-slate-50">
+    <div className="min-h-screen flex bg-zinc-950">
       {/* Left Panel */}
-      <div className="hidden lg:flex lg:w-1/2 bg-slate-900 p-12 flex-col justify-between">
+      <div className="hidden lg:flex lg:w-1/2 bg-zinc-900 border-r border-zinc-800 p-12 flex-col justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-cyan-400 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
             <Shield className="h-6 w-6 text-white" />
           </div>
-          <span className="text-xl font-semibold text-white">GBrain</span>
+          <span className="text-xl font-semibold text-orange-500">GBrain</span>
         </div>
 
         <div className="space-y-6">
           <h1 className="text-4xl font-bold text-white leading-tight">
             Siber Guvenlik<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">
-              AI Asistani
-            </span>
+            <span className="text-orange-500">AI Asistani</span>
           </h1>
-          <p className="text-slate-400 text-lg max-w-md">
+          <p className="text-zinc-400 text-lg max-w-md">
             Yapay zeka destekli guvenlik analizi, zafiyet tespiti ve penetrasyon testi asistani.
           </p>
           <div className="flex gap-12 pt-4">
             <div>
               <div className="text-2xl font-bold text-white">AI</div>
-              <div className="text-sm text-slate-500">Powered</div>
+              <div className="text-sm text-zinc-500">Powered</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-white">OWASP</div>
-              <div className="text-sm text-slate-500">Top 10</div>
+              <div className="text-sm text-zinc-500">Top 10</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-white">24/7</div>
-              <div className="text-sm text-slate-500">Ready</div>
+              <div className="text-sm text-zinc-500">Ready</div>
             </div>
           </div>
         </div>
 
-        <div className="text-slate-600 text-sm">
+        <div className="text-zinc-600 text-sm">
           2024 GBrain Security
         </div>
       </div>
@@ -88,30 +86,30 @@ export default function LoginForm() {
         <div className="w-full max-w-sm">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-cyan-400 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
               <Shield className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-semibold text-slate-900">GBrain</span>
+            <span className="text-xl font-semibold text-orange-500">GBrain</span>
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-slate-900">Giris Yap</h2>
-            <p className="text-slate-500 mt-1">Devam etmek icin giris yapin</p>
+            <h2 className="text-2xl font-bold text-orange-500">Giris Yap</h2>
+            <p className="text-zinc-400 mt-1">Devam etmek icin giris yapin</p>
           </div>
 
           {(error || loginError) && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm mb-6">
+            <div className="bg-red-500/20 border border-red-500/50 text-red-400 px-4 py-3 rounded-lg text-sm mb-6">
               {loginError || 'Giris basarisiz'}
             </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-slate-700">
+              <Label htmlFor="username" className="text-white">
                 Kullanici Adi
               </Label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
                 <Input
                   id="username"
                   type="text"
@@ -119,17 +117,17 @@ export default function LoginForm() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  className="pl-10 h-11 bg-white border-slate-200 focus:border-indigo-500 focus:ring-indigo-500"
+                  className="pl-10 h-11 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-orange-500 focus:ring-orange-500"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-700">
+              <Label htmlFor="password" className="text-white">
                 Sifre
               </Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
                 <Input
                   id="password"
                   type="password"
@@ -137,14 +135,14 @@ export default function LoginForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="pl-10 h-11 bg-white border-slate-200 focus:border-indigo-500 focus:ring-indigo-500"
+                  className="pl-10 h-11 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 focus:border-orange-500 focus:ring-orange-500"
                 />
               </div>
             </div>
 
             <Button
               type="submit"
-              className="w-full h-11 bg-indigo-600 hover:bg-indigo-700 text-white font-medium"
+              className="w-full h-11 bg-orange-500 hover:bg-orange-600 text-white font-medium"
               disabled={isLoading}
             >
               {isLoading ? (

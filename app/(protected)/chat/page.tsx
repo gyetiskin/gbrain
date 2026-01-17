@@ -142,21 +142,21 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50">
+    <div className="flex flex-col h-[calc(100vh-64px)]">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4">
+      <div className="bg-zinc-900 border-b border-zinc-800 px-6 py-4">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-cyan-400 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
               <Bot className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-slate-900">AI Asistan</h1>
-              <p className="text-sm text-slate-500">Siber guvenlik uzmani</p>
+              <h1 className="text-lg font-semibold text-orange-500">AI Asistan</h1>
+              <p className="text-sm text-zinc-500">Siber guvenlik uzmani</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-sm">
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-500/20 text-orange-400 rounded-lg text-sm">
               <Database className="h-4 w-4" />
               <span className="font-medium">{knowledgeCount} dokuman</span>
             </div>
@@ -164,7 +164,7 @@ export default function ChatPage() {
               variant="outline"
               size="sm"
               onClick={clearChat}
-              className="h-9 px-3 border-slate-200 text-slate-500 hover:text-red-600 hover:border-red-200"
+              className="h-9 px-3 bg-transparent border-zinc-700 text-zinc-400 hover:text-red-400 hover:border-red-500/50"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -177,20 +177,20 @@ export default function ChatPage() {
         <div className="max-w-4xl mx-auto space-y-6">
           {isLoadingHistory ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="h-8 w-8 text-indigo-500 animate-spin mb-3" />
-              <p className="text-slate-500">Sohbet gecmisi yukleniyor...</p>
+              <Loader2 className="h-8 w-8 text-orange-500 animate-spin mb-3" />
+              <p className="text-zinc-500">Sohbet gecmisi yukleniyor...</p>
             </div>
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-cyan-400 rounded-2xl flex items-center justify-center mb-6">
+              <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mb-6">
                 <Shield className="h-8 w-8 text-white" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-900 mb-2">GBrain AI Asistani</h2>
-              <p className="text-slate-500 text-center max-w-md mb-6">
+              <h2 className="text-xl font-semibold text-orange-500 mb-2">GBrain AI Asistani</h2>
+              <p className="text-zinc-400 text-center max-w-md mb-6">
                 Siber guvenlik, zafiyet analizi ve web guvenligi konularinda size yardimci olmak icin buradayim.
               </p>
               {knowledgeCount > 0 && (
-                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-lg text-sm">
+                <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm">
                   <Database className="h-4 w-4" />
                   {knowledgeCount} dokuman bilgi tabanindan okunuyor
                 </div>
@@ -208,8 +208,8 @@ export default function ChatPage() {
                 <div className={cn(
                   'w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0',
                   message.role === 'user'
-                    ? 'bg-slate-700'
-                    : 'bg-gradient-to-br from-indigo-500 to-cyan-400'
+                    ? 'bg-zinc-700'
+                    : 'bg-orange-500'
                 )}>
                   {message.role === 'user' ? (
                     <User className="h-4 w-4 text-white" />
@@ -221,8 +221,8 @@ export default function ChatPage() {
                   className={cn(
                     'max-w-[75%] rounded-2xl px-4 py-3',
                     message.role === 'user'
-                      ? 'bg-slate-700 text-white'
-                      : 'bg-white border border-slate-200 text-slate-700'
+                      ? 'bg-zinc-800 text-white'
+                      : 'bg-zinc-900 border border-zinc-800 text-zinc-200'
                   )}
                 >
                   <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
@@ -234,13 +234,13 @@ export default function ChatPage() {
           )}
           {isLoading && (
             <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-cyan-400 flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0">
                 <Bot className="h-4 w-4 text-white" />
               </div>
-              <div className="bg-white border border-slate-200 rounded-2xl px-4 py-3">
+              <div className="bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3">
                 <div className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-indigo-500" />
-                  <span className="text-sm text-slate-500">Dusunuyor...</span>
+                  <Loader2 className="h-4 w-4 animate-spin text-orange-500" />
+                  <span className="text-sm text-zinc-400">Dusunuyor...</span>
                 </div>
               </div>
             </div>
@@ -249,7 +249,7 @@ export default function ChatPage() {
       </ScrollArea>
 
       {/* Input */}
-      <div className="bg-white border-t border-slate-200 px-6 py-4">
+      <div className="bg-zinc-900 border-t border-zinc-800 px-6 py-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex gap-3">
             <Textarea
@@ -257,13 +257,13 @@ export default function ChatPage() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Mesajinizi yazin..."
-              className="min-h-[48px] max-h-[200px] py-3 bg-slate-50 border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-400 resize-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              className="min-h-[48px] max-h-[200px] py-3 bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 resize-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
               disabled={isLoading}
             />
             <Button
               onClick={sendMessage}
               disabled={!input.trim() || isLoading}
-              className="h-12 w-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50"
+              className="h-12 w-12 rounded-xl bg-orange-500 hover:bg-orange-600 text-white disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
