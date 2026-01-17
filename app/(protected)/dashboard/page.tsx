@@ -4,14 +4,6 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import {
   MessageSquare,
   BookOpen,
   AlertTriangle,
@@ -19,7 +11,9 @@ import {
   ArrowRight,
   FileText,
   Image as ImageIcon,
-  Link as LinkIcon,
+  TrendingUp,
+  Activity,
+  Zap,
 } from 'lucide-react'
 
 interface Stats {
@@ -90,233 +84,212 @@ export default function DashboardPage() {
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return 'bg-red-100 text-red-600 border-red-200'
+        return 'bg-red-100 text-red-700'
       case 'high':
-        return 'bg-orange-100 text-orange-600 border-orange-200'
+        return 'bg-orange-100 text-orange-700'
       case 'medium':
-        return 'bg-yellow-100 text-yellow-600 border-yellow-200'
+        return 'bg-yellow-100 text-yellow-700'
       default:
-        return 'bg-green-100 text-green-600 border-green-200'
+        return 'bg-green-100 text-green-700'
     }
   }
 
+  const statCards = [
+    {
+      label: 'Bilgi Tabani',
+      value: stats.knowledgeCount,
+      icon: BookOpen,
+      color: 'from-blue-500 to-blue-600',
+      shadowColor: 'shadow-blue-500/25',
+      description: 'kayitli dokuman',
+    },
+    {
+      label: 'Analizler',
+      value: stats.analysisCount,
+      icon: Shield,
+      color: 'from-emerald-500 to-emerald-600',
+      shadowColor: 'shadow-emerald-500/25',
+      description: 'tamamlanan analiz',
+    },
+    {
+      label: 'Chat Mesajlari',
+      value: stats.chatCount,
+      icon: MessageSquare,
+      color: 'from-violet-500 to-violet-600',
+      shadowColor: 'shadow-violet-500/25',
+      description: 'mesaj',
+    },
+    {
+      label: 'Kritik Bulgular',
+      value: stats.criticalFindings,
+      icon: AlertTriangle,
+      color: 'from-red-500 to-red-600',
+      shadowColor: 'shadow-red-500/25',
+      description: 'yuksek seviye',
+    },
+  ]
+
+  const quickActions = [
+    { href: '/chat', icon: MessageSquare, label: 'AI Chat', desc: 'Soru sor', color: 'orange' },
+    { href: '/analyze', icon: Shield, label: 'Analiz', desc: 'Request analizi', color: 'emerald' },
+    { href: '/knowledge', icon: FileText, label: 'PDF Yukle', desc: 'Dokuman ekle', color: 'blue' },
+    { href: '/knowledge', icon: ImageIcon, label: 'Gorsel Ekle', desc: 'Screenshot', color: 'violet' },
+  ]
+
   return (
-    <div className="p-6 space-y-6 bg-white min-h-screen">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-800">
-          Hosgeldin, {session?.user?.name || 'Kullanici'}
-        </h1>
-        <p className="text-gray-500">GBrain Siber Guvenlik Asistani</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">
+              Hos Geldin, {session?.user?.name || 'Admin'} 👋
+            </h1>
+            <p className="text-gray-500 mt-1">GBrain Siber Guvenlik Asistani</p>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+            <Activity className="h-4 w-4" />
+            Sistem Aktif
+          </div>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-white border-gray-200 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">
-              Bilgi Tabani
-            </CardTitle>
-            <BookOpen className="h-4 w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-800">
-              {loading ? '-' : stats.knowledgeCount}
-            </div>
-            <p className="text-xs text-gray-500">kayitli dokuman</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border-gray-200 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">
-              Analizler
-            </CardTitle>
-            <Shield className="h-4 w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-800">
-              {loading ? '-' : stats.analysisCount}
-            </div>
-            <p className="text-xs text-gray-500">tamamlanan analiz</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border-gray-200 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">
-              Chat Mesajlari
-            </CardTitle>
-            <MessageSquare className="h-4 w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-800">
-              {loading ? '-' : stats.chatCount}
-            </div>
-            <p className="text-xs text-gray-500">mesaj</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border-gray-200 shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500">
-              Kritik Bulgular
-            </CardTitle>
-            <AlertTriangle className="h-4 w-4 text-red-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-500">
-              {loading ? '-' : stats.criticalFindings}
-            </div>
-            <p className="text-xs text-gray-500">yuksek/kritik seviye</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-white border-gray-200 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-gray-800">Hizli Erisim</CardTitle>
-            <CardDescription className="text-gray-500">
-              Sik kullanilan ozellikler
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-4">
-            <Link
-              href="/chat"
-              className="flex items-center gap-3 p-4 rounded-lg bg-gray-50 hover:bg-orange-50 border border-gray-200 hover:border-orange-300 transition-colors group"
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {statCards.map((stat) => (
+            <div
+              key={stat.label}
+              className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
             >
-              <MessageSquare className="h-8 w-8 text-orange-500" />
-              <div className="flex-1">
-                <p className="font-medium text-gray-800">AI Chat</p>
-                <p className="text-xs text-gray-500">Soru sor</p>
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
+                  <p className="text-3xl font-bold text-gray-800 mt-2">
+                    {loading ? '-' : stat.value}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">{stat.description}</p>
+                </div>
+                <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} shadow-lg ${stat.shadowColor}`}>
+                  <stat.icon className="h-6 w-6 text-white" />
+                </div>
               </div>
-              <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-orange-500 transition-colors" />
-            </Link>
+            </div>
+          ))}
+        </div>
 
-            <Link
-              href="/analyze"
-              className="flex items-center gap-3 p-4 rounded-lg bg-gray-50 hover:bg-orange-50 border border-gray-200 hover:border-orange-300 transition-colors group"
-            >
-              <Shield className="h-8 w-8 text-orange-500" />
-              <div className="flex-1">
-                <p className="font-medium text-gray-800">Analiz</p>
-                <p className="text-xs text-gray-500">Request analizi</p>
-              </div>
-              <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-orange-500 transition-colors" />
-            </Link>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Quick Actions */}
+          <div className="lg:col-span-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center gap-2 mb-6">
+              <Zap className="h-5 w-5 text-orange-500" />
+              <h2 className="text-lg font-bold text-gray-800">Hizli Erisim</h2>
+            </div>
+            <div className="space-y-3">
+              {quickActions.map((action) => (
+                <Link
+                  key={action.label}
+                  href={action.href}
+                  className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 hover:bg-orange-50 border border-transparent hover:border-orange-200 transition-all group"
+                >
+                  <div className="p-2.5 rounded-lg bg-white shadow-sm group-hover:shadow-md transition-shadow">
+                    <action.icon className="h-5 w-5 text-gray-600 group-hover:text-orange-500 transition-colors" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-gray-800">{action.label}</p>
+                    <p className="text-xs text-gray-500">{action.desc}</p>
+                  </div>
+                  <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
+                </Link>
+              ))}
+            </div>
+          </div>
 
-            <Link
-              href="/knowledge"
-              className="flex items-center gap-3 p-4 rounded-lg bg-gray-50 hover:bg-orange-50 border border-gray-200 hover:border-orange-300 transition-colors group"
-            >
-              <FileText className="h-8 w-8 text-orange-500" />
-              <div className="flex-1">
-                <p className="font-medium text-gray-800">PDF Yukle</p>
-                <p className="text-xs text-gray-500">Dokuman ekle</p>
-              </div>
-              <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-orange-500 transition-colors" />
-            </Link>
-
-            <Link
-              href="/knowledge"
-              className="flex items-center gap-3 p-4 rounded-lg bg-gray-50 hover:bg-orange-50 border border-gray-200 hover:border-orange-300 transition-colors group"
-            >
-              <ImageIcon className="h-8 w-8 text-orange-500" />
-              <div className="flex-1">
-                <p className="font-medium text-gray-800">Gorsel Ekle</p>
-                <p className="text-xs text-gray-500">Screenshot analizi</p>
-              </div>
-              <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-orange-500 transition-colors" />
-            </Link>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border-gray-200 shadow-sm">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-gray-800">Son Analizler</CardTitle>
-                <CardDescription className="text-gray-500">
-                  En son yapilan guvenlik analizleri
-                </CardDescription>
+          {/* Recent Analyses */}
+          <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-orange-500" />
+                <h2 className="text-lg font-bold text-gray-800">Son Analizler</h2>
               </div>
               <Link
                 href="/analyze"
-                className="text-sm text-orange-500 hover:text-orange-600"
+                className="text-sm text-orange-500 hover:text-orange-600 font-medium"
               >
-                Tumu
+                Tumu →
               </Link>
             </div>
-          </CardHeader>
-          <CardContent>
             {loading ? (
-              <p className="text-gray-500 text-center py-8">Yukleniyor...</p>
+              <div className="flex items-center justify-center py-12 text-gray-400">
+                Yukleniyor...
+              </div>
             ) : recentAnalyses.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">
-                Henuz analiz yapilmadi
-              </p>
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <Shield className="h-12 w-12 text-gray-300 mb-3" />
+                <p className="text-gray-500">Henuz analiz yapilmadi</p>
+                <Link
+                  href="/analyze"
+                  className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors"
+                >
+                  Ilk Analizi Baslat
+                </Link>
+              </div>
             ) : (
               <div className="space-y-3">
                 {recentAnalyses.map((analysis) => (
-                  <div
+                  <Link
                     key={analysis.id}
-                    className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100"
+                    href={`/analyze?id=${analysis.id}`}
+                    className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
                   >
-                    <Badge
-                      variant="outline"
-                      className={getSeverityColor(analysis.severity)}
-                    >
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getSeverityColor(analysis.severity)}`}>
                       {analysis.severity}
-                    </Badge>
+                    </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-800 truncate">
+                      <p className="text-sm text-gray-800 truncate font-medium">
                         {analysis.findings.summary ||
                           analysis.findings.vulnerabilities?.[0]?.name ||
                           'Analiz tamamlandi'}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {analysis.source} -{' '}
-                        {new Date(analysis.createdAt).toLocaleDateString('tr')}
+                        {analysis.source} • {new Date(analysis.createdAt).toLocaleDateString('tr')}
                       </p>
                     </div>
-                    <Link
-                      href={`/analyze?id=${analysis.id}`}
-                      className="text-orange-500 hover:text-orange-600"
-                    >
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
+                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-orange-500 transition-colors" />
+                  </Link>
                 ))}
               </div>
             )}
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="bg-white border-gray-200 shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-gray-800 flex items-center gap-2">
-            <LinkIcon className="h-5 w-5 text-orange-500" />
-            Burp Suite Entegrasyonu
-          </CardTitle>
-          <CardDescription className="text-gray-500">
-            Burp Suite ile otomatik analiz
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="bg-gray-50 rounded-lg p-4 space-y-2 border border-gray-200">
-            <p className="text-sm text-gray-700">
-              Webhook URL: <code className="text-orange-600 bg-orange-50 px-2 py-1 rounded">{typeof window !== 'undefined' ? window.location.origin : ''}/api/burp-webhook</code>
-            </p>
-            <p className="text-sm text-gray-700">
-              User ID: <code className="text-orange-600 bg-orange-50 px-2 py-1 rounded">{session?.user?.id || '-'}</code>
-            </p>
-            <p className="text-xs text-gray-500 mt-2">
-              Burp Extension&apos;i kurun ve bu bilgileri extension ayarlarinda girin.
-              Istekler otomatik olarak analiz edilecek.
-            </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+
+        {/* Burp Integration */}
+        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 text-white">
+          <div className="flex items-start gap-4">
+            <div className="p-3 bg-orange-500 rounded-xl">
+              <Shield className="h-6 w-6" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold mb-1">Burp Suite Entegrasyonu</h3>
+              <p className="text-gray-400 text-sm mb-4">
+                Burp Suite ile otomatik zafiyet analizi yapin
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-gray-700/50 rounded-xl p-4">
+                  <p className="text-xs text-gray-400 mb-1">Webhook URL</p>
+                  <code className="text-orange-400 text-sm">
+                    {typeof window !== 'undefined' ? window.location.origin : ''}/api/burp-webhook
+                  </code>
+                </div>
+                <div className="bg-gray-700/50 rounded-xl p-4">
+                  <p className="text-xs text-gray-400 mb-1">User ID</p>
+                  <code className="text-orange-400 text-sm">
+                    {session?.user?.id || '-'}
+                  </code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

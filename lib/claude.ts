@@ -70,7 +70,7 @@ export async function chat(
   }
 
   const response = await anthropic.messages.create({
-    model: 'claude-opus-4-5-20250514',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 8192,
     system: systemPrompt,
     messages: messages.map(m => ({
@@ -142,7 +142,7 @@ Analiz yaparken asagidaki JSON formatinda yanit ver:
   }
 
   const aiResponse = await anthropic.messages.create({
-    model: 'claude-opus-4-5-20250514',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 8192,
     system: systemPrompt,
     messages: [{ role: 'user', content: userMessage }],
@@ -180,7 +180,7 @@ export async function analyzeImage(
   prompt?: string
 ): Promise<string> {
   const response = await anthropic.messages.create({
-    model: 'claude-opus-4-5-20250514',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 8192,
     system: SECURITY_SYSTEM_PROMPT,
     messages: [
