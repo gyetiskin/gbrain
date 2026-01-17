@@ -133,16 +133,16 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="border-b border-slate-700 p-4 flex items-center justify-between">
+    <div className="flex flex-col h-screen bg-white">
+      <div className="border-b border-gray-200 p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Bot className="h-8 w-8 text-emerald-500" />
-            <Brain className="h-4 w-4 text-emerald-400 absolute -bottom-1 -right-1" />
+            <Bot className="h-8 w-8 text-orange-500" />
+            <Brain className="h-4 w-4 text-orange-400 absolute -bottom-1 -right-1" />
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-white">AI Chat</h1>
-            <p className="text-sm text-slate-400">
+            <h1 className="text-lg font-semibold text-gray-800">AI Chat</h1>
+            <p className="text-sm text-gray-500">
               Siber guvenlik sorularinizi sorun
             </p>
           </div>
@@ -152,10 +152,10 @@ export default function ChatPage() {
             variant="outline"
             size="sm"
             className={cn(
-              'border-slate-600',
+              'border-gray-300',
               includeKnowledge
-                ? 'bg-emerald-600/20 text-emerald-400 border-emerald-500/50'
-                : 'text-slate-400'
+                ? 'bg-orange-50 text-orange-600 border-orange-300'
+                : 'text-gray-500'
             )}
             onClick={() => setIncludeKnowledge(!includeKnowledge)}
           >
@@ -166,7 +166,7 @@ export default function ChatPage() {
             variant="outline"
             size="sm"
             onClick={clearChat}
-            className="border-slate-600 text-slate-400 hover:text-red-400 hover:border-red-500/50"
+            className="border-gray-300 text-gray-500 hover:text-red-500 hover:border-red-300"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -177,16 +177,16 @@ export default function ChatPage() {
         <div className="max-w-3xl mx-auto space-y-4">
           {isLoadingHistory ? (
             <div className="text-center py-12">
-              <Loader2 className="h-12 w-12 text-emerald-500 mx-auto mb-4 animate-spin" />
-              <p className="text-slate-400">Sohbet gecmisi yukleniyor...</p>
+              <Loader2 className="h-12 w-12 text-orange-500 mx-auto mb-4 animate-spin" />
+              <p className="text-gray-500">Sohbet gecmisi yukleniyor...</p>
             </div>
           ) : messages.length === 0 ? (
             <div className="text-center py-12">
-              <Bot className="h-16 w-16 text-slate-600 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-slate-300 mb-2">
+              <Bot className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-gray-700 mb-2">
                 GBrain AI Asistani
               </h2>
-              <p className="text-slate-400 mb-6">
+              <p className="text-gray-500 mb-6">
                 Siber guvenlik, zafiyet analizi ve web guvenligi hakkinda soru
                 sorun.
               </p>
@@ -200,7 +200,7 @@ export default function ChatPage() {
                   <button
                     key={suggestion}
                     onClick={() => setInput(suggestion)}
-                    className="text-left p-3 rounded-lg bg-slate-800/50 border border-slate-700 text-slate-300 hover:bg-slate-700/50 hover:border-emerald-500/50 transition-colors text-sm"
+                    className="text-left p-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-600 hover:bg-orange-50 hover:border-orange-300 hover:text-orange-600 transition-colors text-sm"
                   >
                     {suggestion}
                   </button>
@@ -218,8 +218,8 @@ export default function ChatPage() {
               >
                 {message.role === 'assistant' && (
                   <div className="flex-shrink-0">
-                    <div className="h-8 w-8 rounded-full bg-emerald-600/20 flex items-center justify-center">
-                      <Bot className="h-5 w-5 text-emerald-500" />
+                    <div className="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center">
+                      <Bot className="h-5 w-5 text-orange-500" />
                     </div>
                   </div>
                 )}
@@ -227,11 +227,11 @@ export default function ChatPage() {
                   className={cn(
                     'max-w-[80%] p-4',
                     message.role === 'user'
-                      ? 'bg-emerald-600 border-emerald-500 text-white'
-                      : 'bg-slate-800/50 border-slate-700 text-slate-200'
+                      ? 'bg-orange-500 border-orange-400 text-white'
+                      : 'bg-gray-50 border-gray-200 text-gray-700'
                   )}
                 >
-                  <div className="prose prose-invert prose-sm max-w-none">
+                  <div className="prose prose-sm max-w-none">
                     <pre className="whitespace-pre-wrap font-sans text-sm">
                       {message.content}
                     </pre>
@@ -239,8 +239,8 @@ export default function ChatPage() {
                 </Card>
                 {message.role === 'user' && (
                   <div className="flex-shrink-0">
-                    <div className="h-8 w-8 rounded-full bg-slate-600 flex items-center justify-center">
-                      <User className="h-5 w-5 text-slate-300" />
+                    <div className="h-8 w-8 rounded-full bg-gray-600 flex items-center justify-center">
+                      <User className="h-5 w-5 text-white" />
                     </div>
                   </div>
                 )}
@@ -250,32 +250,32 @@ export default function ChatPage() {
           {isLoading && (
             <div className="flex gap-3">
               <div className="flex-shrink-0">
-                <div className="h-8 w-8 rounded-full bg-emerald-600/20 flex items-center justify-center">
-                  <Bot className="h-5 w-5 text-emerald-500" />
+                <div className="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center">
+                  <Bot className="h-5 w-5 text-orange-500" />
                 </div>
               </div>
-              <Card className="bg-slate-800/50 border-slate-700 p-4">
-                <Loader2 className="h-5 w-5 animate-spin text-emerald-500" />
+              <Card className="bg-gray-50 border-gray-200 p-4">
+                <Loader2 className="h-5 w-5 animate-spin text-orange-500" />
               </Card>
             </div>
           )}
         </div>
       </ScrollArea>
 
-      <div className="border-t border-slate-700 p-4">
+      <div className="border-t border-gray-200 p-4 bg-gray-50">
         <div className="max-w-3xl mx-auto flex gap-2">
           <Textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Mesajinizi yazin..."
-            className="min-h-[60px] max-h-[200px] bg-slate-800/50 border-slate-600 text-white placeholder:text-slate-500 resize-none"
+            className="min-h-[60px] max-h-[200px] bg-white border-gray-300 text-gray-800 placeholder:text-gray-400 resize-none"
             disabled={isLoading}
           />
           <Button
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
-            className="bg-emerald-600 hover:bg-emerald-700 h-auto"
+            className="bg-orange-500 hover:bg-orange-600 text-white h-auto"
           >
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin" />

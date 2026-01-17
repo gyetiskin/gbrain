@@ -35,12 +35,12 @@ export function Sidebar() {
   const { data: session } = useSession()
 
   return (
-    <div className="flex flex-col h-full w-64 bg-slate-800/50 border-r border-slate-700">
-      <div className="p-4 border-b border-slate-700">
+    <div className="flex flex-col h-full w-64 bg-gray-800 border-r border-gray-700">
+      <div className="p-4 border-b border-gray-700">
         <Link href="/dashboard" className="flex items-center gap-2">
           <div className="relative">
-            <Shield className="h-8 w-8 text-emerald-500" />
-            <Brain className="h-4 w-4 text-emerald-400 absolute -bottom-1 -right-1" />
+            <Shield className="h-8 w-8 text-orange-500" />
+            <Brain className="h-4 w-4 text-orange-400 absolute -bottom-1 -right-1" />
           </div>
           <span className="text-xl font-bold text-white">GBrain</span>
         </Link>
@@ -57,8 +57,8 @@ export function Sidebar() {
               className={cn(
                 'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
                 isActive
-                  ? 'bg-emerald-600 text-white'
-                  : 'text-slate-300 hover:bg-slate-700/50 hover:text-white'
+                  ? 'bg-orange-500 text-white'
+                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
               )}
             >
               <Icon className="h-5 w-5" />
@@ -68,16 +68,16 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-slate-700">
+      <div className="p-4 border-t border-gray-700">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="w-full justify-start gap-3 text-slate-300 hover:text-white hover:bg-slate-700/50"
+              className="w-full justify-start gap-3 text-gray-300 hover:text-white hover:bg-gray-700"
             >
               <Avatar className="h-8 w-8">
                 <AvatarImage src={session?.user?.image || ''} />
-                <AvatarFallback className="bg-emerald-600 text-white">
+                <AvatarFallback className="bg-orange-500 text-white">
                   {session?.user?.name?.[0] || session?.user?.email?.[0] || 'U'}
                 </AvatarFallback>
               </Avatar>
@@ -88,13 +88,13 @@ export function Sidebar() {
               </div>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-slate-800 border-slate-700">
-            <DropdownMenuItem className="text-slate-300 focus:text-white focus:bg-slate-700">
+          <DropdownMenuContent align="end" className="w-56 bg-gray-800 border-gray-700">
+            <DropdownMenuItem className="text-gray-300 focus:text-white focus:bg-gray-700">
               <User className="mr-2 h-4 w-4" />
               <span>Profil</span>
             </DropdownMenuItem>
             <DropdownMenuItem
-              className="text-red-400 focus:text-red-300 focus:bg-slate-700"
+              className="text-red-400 focus:text-red-300 focus:bg-gray-700"
               onClick={() => signOut({ callbackUrl: '/login' })}
             >
               <LogOut className="mr-2 h-4 w-4" />

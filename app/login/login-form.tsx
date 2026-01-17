@@ -43,30 +43,30 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-slate-800/50 border-slate-700">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-white border-gray-200 shadow-lg">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="relative">
-              <Shield className="h-10 w-10 text-emerald-500" />
-              <Brain className="h-5 w-5 text-emerald-400 absolute -bottom-1 -right-1" />
+              <Shield className="h-10 w-10 text-orange-500" />
+              <Brain className="h-5 w-5 text-orange-400 absolute -bottom-1 -right-1" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-white">GBrain</CardTitle>
-          <CardDescription className="text-slate-400">
+          <CardTitle className="text-2xl text-gray-800">GBrain</CardTitle>
+          <CardDescription className="text-gray-500">
             Siber Guvenlik AI Asistani
           </CardDescription>
         </CardHeader>
         <CardContent>
           {(error || loginError) && (
-            <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-2 rounded-lg text-sm mb-4">
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-2 rounded-lg text-sm mb-4">
               {loginError || 'Giris basarisiz'}
             </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username" className="text-slate-300">
+              <Label htmlFor="username" className="text-gray-700">
                 Kullanici Adi
               </Label>
               <Input
@@ -76,11 +76,11 @@ export default function LoginForm() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-500"
+                className="bg-white border-gray-300 text-gray-800 placeholder:text-gray-400"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-300">
+              <Label htmlFor="password" className="text-gray-700">
                 Sifre
               </Label>
               <Input
@@ -90,12 +90,12 @@ export default function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-500"
+                className="bg-white border-gray-300 text-gray-800 placeholder:text-gray-400"
               />
             </div>
             <Button
               type="submit"
-              className="w-full bg-emerald-600 hover:bg-emerald-700"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white"
               disabled={isLoading}
             >
               {isLoading ? (

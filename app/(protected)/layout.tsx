@@ -22,8 +22,8 @@ export default function ProtectedLayout({
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
       </div>
     )
   }
@@ -33,7 +33,7 @@ export default function ProtectedLayout({
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 flex">
+    <div className="min-h-screen bg-white flex">
       <Sidebar />
       <main className="flex-1 overflow-auto">{children}</main>
     </div>
