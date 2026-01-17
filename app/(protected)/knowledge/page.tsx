@@ -24,15 +24,11 @@ import {
   Loader2,
   Upload,
   BookOpen,
-  Database,
-  BarChart3,
-  Clock,
-  Eye,
   ChevronDown,
   ChevronUp,
-  Sparkles,
 } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
 
 interface Knowledge {
   id: string
@@ -227,148 +223,121 @@ export default function KnowledgePage() {
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'pdf':
-        return <FileText className="h-4 w-4" />
+        return FileText
       case 'image':
-        return <ImageIcon className="h-4 w-4" />
+        return ImageIcon
       case 'url':
-        return <LinkIcon className="h-4 w-4" />
+        return LinkIcon
       default:
-        return <BookOpen className="h-4 w-4" />
+        return BookOpen
     }
   }
 
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'pdf':
-        return 'bg-red-100 text-red-600 border-red-200'
+        return 'bg-red-100 text-red-600'
       case 'image':
-        return 'bg-violet-100 text-violet-600 border-violet-200'
+        return 'bg-purple-100 text-purple-600'
       case 'url':
-        return 'bg-blue-100 text-blue-600 border-blue-200'
+        return 'bg-blue-100 text-blue-600'
       default:
-        return 'bg-emerald-100 text-emerald-600 border-emerald-200'
+        return 'bg-emerald-100 text-emerald-600'
     }
-  }
-
-  const getTypeBgColor = (type: string) => {
-    switch (type) {
-      case 'pdf':
-        return 'from-red-500 to-red-600'
-      case 'image':
-        return 'from-violet-500 to-violet-600'
-      case 'url':
-        return 'from-blue-500 to-blue-600'
-      default:
-        return 'from-emerald-500 to-emerald-600'
-    }
-  }
-
-  // Stats calculation
-  const stats = {
-    total: knowledge.length,
-    pdf: knowledge.filter((k) => k.type === 'pdf').length,
-    image: knowledge.filter((k) => k.type === 'image').length,
-    text: knowledge.filter((k) => k.type === 'text').length,
-    url: knowledge.filter((k) => k.type === 'url').length,
-    totalChars: knowledge.reduce((acc, k) => acc + k.content.length, 0),
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="p-8 bg-slate-50 min-h-screen">
+      <div className="max-w-5xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Bilgi Tabani</h1>
-            <p className="text-gray-500 mt-1">PDF, gorsel, metin ve URL kaynaklari</p>
+            <h1 className="text-2xl font-bold text-slate-900">Bilgi Tabani</h1>
+            <p className="text-slate-500 mt-1">PDF, gorsel, metin ve URL kaynaklari</p>
           </div>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25">
+              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
                 <Plus className="h-4 w-4 mr-2" />
                 Yeni Ekle
               </Button>
             </DialogTrigger>
-            <DialogContent className="bg-white border-gray-200">
+            <DialogContent className="bg-white">
               <DialogHeader>
-                <DialogTitle className="text-gray-800">Yeni Bilgi Ekle</DialogTitle>
-                <DialogDescription className="text-gray-500">
+                <DialogTitle className="text-slate-900">Yeni Bilgi Ekle</DialogTitle>
+                <DialogDescription className="text-slate-500">
                   Bilgi tabanina yeni kaynak ekleyin
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleUpload} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title" className="text-gray-700">
-                    Baslik
-                  </Label>
+                  <Label htmlFor="title" className="text-slate-700">Baslik</Label>
                   <Input
                     id="title"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="bg-gray-50 border-gray-200 text-gray-800 focus:border-orange-500 focus:ring-orange-500"
+                    className="bg-slate-50 border-slate-200 focus:border-indigo-500"
                     placeholder="Ornek: OWASP Top 10 2023"
                   />
                 </div>
 
                 <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="bg-gray-100 border border-gray-200">
-                    <TabsTrigger value="pdf" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+                  <TabsList className="bg-slate-100">
+                    <TabsTrigger value="pdf" className="data-[state=active]:bg-white">
                       <FileText className="h-4 w-4 mr-1" />
                       PDF
                     </TabsTrigger>
-                    <TabsTrigger value="image" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+                    <TabsTrigger value="image" className="data-[state=active]:bg-white">
                       <ImageIcon className="h-4 w-4 mr-1" />
                       Gorsel
                     </TabsTrigger>
-                    <TabsTrigger value="text" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+                    <TabsTrigger value="text" className="data-[state=active]:bg-white">
                       <BookOpen className="h-4 w-4 mr-1" />
                       Metin
                     </TabsTrigger>
-                    <TabsTrigger value="url" className="data-[state=active]:bg-orange-500 data-[state=active]:text-white">
+                    <TabsTrigger value="url" className="data-[state=active]:bg-white">
                       <LinkIcon className="h-4 w-4 mr-1" />
                       URL
                     </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="pdf" className="space-y-2 mt-4">
-                    <Label className="text-gray-700">PDF Dosyasi</Label>
+                    <Label className="text-slate-700">PDF Dosyasi</Label>
                     <Input
                       ref={fileInputRef}
                       type="file"
                       accept=".pdf"
-                      className="bg-gray-50 border-gray-200 text-gray-800 file:bg-orange-500 file:text-white file:border-0 file:rounded file:mr-2"
+                      className="bg-slate-50 border-slate-200"
                     />
                   </TabsContent>
 
                   <TabsContent value="image" className="space-y-2 mt-4">
-                    <Label className="text-gray-700">Gorsel Dosyasi</Label>
+                    <Label className="text-slate-700">Gorsel Dosyasi</Label>
                     <Input
                       ref={fileInputRef}
                       type="file"
                       accept="image/*"
-                      className="bg-gray-50 border-gray-200 text-gray-800 file:bg-orange-500 file:text-white file:border-0 file:rounded file:mr-2"
+                      className="bg-slate-50 border-slate-200"
                     />
-                    <p className="text-xs text-gray-500">
-                      Claude Vision ile analiz edilecek
-                    </p>
+                    <p className="text-xs text-slate-500">Claude Vision ile analiz edilecek</p>
                   </TabsContent>
 
                   <TabsContent value="text" className="space-y-2 mt-4">
-                    <Label className="text-gray-700">Metin</Label>
+                    <Label className="text-slate-700">Metin</Label>
                     <Textarea
                       value={text}
                       onChange={(e) => setText(e.target.value)}
-                      className="bg-gray-50 border-gray-200 text-gray-800 min-h-[150px] focus:border-orange-500 focus:ring-orange-500"
+                      className="bg-slate-50 border-slate-200 min-h-[120px]"
                       placeholder="Guvenlik bilgilerini girin..."
                     />
                   </TabsContent>
 
                   <TabsContent value="url" className="space-y-2 mt-4">
-                    <Label className="text-gray-700">URL</Label>
+                    <Label className="text-slate-700">URL</Label>
                     <Input
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
-                      className="bg-gray-50 border-gray-200 text-gray-800 focus:border-orange-500 focus:ring-orange-500"
+                      className="bg-slate-50 border-slate-200"
                       placeholder="https://example.com/article"
                     />
                   </TabsContent>
@@ -376,7 +345,7 @@ export default function KnowledgePage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white"
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
                   disabled={isUploading}
                 >
                   {isUploading ? (
@@ -396,244 +365,144 @@ export default function KnowledgePage() {
           </Dialog>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg shadow-orange-500/25">
-                <Database className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-800">{stats.total}</p>
-                <p className="text-xs text-gray-500">Toplam</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-red-500 to-red-600">
-                <FileText className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-800">{stats.pdf}</p>
-                <p className="text-xs text-gray-500">PDF</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-violet-600">
-                <ImageIcon className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-800">{stats.image}</p>
-                <p className="text-xs text-gray-500">Gorsel</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600">
-                <BookOpen className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-800">{stats.text}</p>
-                <p className="text-xs text-gray-500">Metin</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600">
-                <LinkIcon className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-800">{stats.url}</p>
-                <p className="text-xs text-gray-500">URL</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-gray-600 to-gray-700">
-                <BarChart3 className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-gray-800">{(stats.totalChars / 1000).toFixed(1)}K</p>
-                <p className="text-xs text-gray-500">Karakter</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Search Section */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="h-5 w-5 text-orange-500" />
-            <h2 className="text-lg font-bold text-gray-800">Semantik Arama</h2>
-          </div>
+        {/* Search */}
+        <div className="bg-white rounded-xl p-5 border border-slate-200">
+          <h2 className="text-lg font-semibold text-slate-900 mb-4">Semantik Arama</h2>
           <div className="flex gap-3">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder="SQL injection nasil tespit edilir?"
-                className="pl-10 h-12 bg-gray-50 border-gray-200 text-gray-800 placeholder:text-gray-400 focus:border-orange-500 focus:ring-orange-500"
+                className="pl-10 bg-slate-50 border-slate-200 focus:border-indigo-500"
               />
             </div>
             <Button
               onClick={handleSearch}
               disabled={isSearching}
-              className="h-12 px-6 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white"
             >
-              {isSearching ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
-              ) : (
-                'Ara'
-              )}
+              {isSearching ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Ara'}
             </Button>
           </div>
 
           {searchResults.length > 0 && (
-            <div className="mt-6 space-y-3">
-              <p className="text-sm text-gray-500 font-medium">
-                {searchResults.length} sonuc bulundu
-              </p>
-              {searchResults.map((result) => (
-                <div
-                  key={result.id}
-                  className="p-4 rounded-xl bg-gray-50 border border-gray-200 hover:border-orange-200 transition-colors"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${getTypeColor(result.metadata?.type || 'text')}`}>
-                      {getTypeIcon(result.metadata?.type || 'text')}
-                      {result.metadata?.type || 'text'}
-                    </span>
-                    <span className="text-gray-800 font-medium">
-                      {result.metadata?.title || 'Untitled'}
-                    </span>
+            <div className="mt-4 space-y-2">
+              <p className="text-sm text-slate-500">{searchResults.length} sonuc bulundu</p>
+              {searchResults.map((result) => {
+                const TypeIcon = getTypeIcon(result.metadata?.type || 'text')
+                return (
+                  <div
+                    key={result.id}
+                    className="p-3 rounded-lg bg-slate-50 border border-slate-200"
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className={cn('px-2 py-0.5 rounded text-xs font-medium', getTypeColor(result.metadata?.type || 'text'))}>
+                        <TypeIcon className="h-3 w-3 inline mr-1" />
+                        {result.metadata?.type || 'text'}
+                      </span>
+                      <span className="text-sm font-medium text-slate-900">
+                        {result.metadata?.title || 'Untitled'}
+                      </span>
+                    </div>
+                    <p className="text-sm text-slate-600 line-clamp-2">{result.content}</p>
                   </div>
-                  <p className="text-sm text-gray-600 line-clamp-3">
-                    {result.content}
-                  </p>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>
 
-        {/* Documents List */}
+        {/* Documents */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-gray-800">
-              Tum Dokumanlar
-            </h2>
-            <span className="text-sm text-gray-500">{knowledge.length} kaynak</span>
+            <h2 className="text-lg font-semibold text-slate-900">Tum Dokumanlar</h2>
+            <span className="text-sm text-slate-500">{knowledge.length} kaynak</span>
           </div>
 
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <Loader2 className="h-10 w-10 text-orange-500 animate-spin mb-4" />
-              <p className="text-gray-500">Yukleniyor...</p>
+              <Loader2 className="h-8 w-8 text-indigo-500 animate-spin mb-3" />
+              <p className="text-slate-500">Yukleniyor...</p>
             </div>
           ) : knowledge.length === 0 ? (
-            <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 text-center">
-              <div className="inline-flex p-4 bg-gray-100 rounded-2xl mb-4">
-                <BookOpen className="h-12 w-12 text-gray-400" />
-              </div>
-              <p className="text-gray-500 mb-4">Henuz kaynak eklenmemis</p>
+            <div className="bg-white rounded-xl p-12 border border-slate-200 text-center">
+              <BookOpen className="h-10 w-10 text-slate-300 mx-auto mb-3" />
+              <p className="text-slate-500 mb-4">Henuz kaynak eklenmemis</p>
               <Button
                 onClick={() => setDialogOpen(true)}
-                className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg shadow-orange-500/25"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Ilk kaynagi ekle
               </Button>
             </div>
           ) : (
-            <div className="space-y-4">
-              {knowledge.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow"
-                >
-                  <div className="p-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-4 flex-1 min-w-0">
-                        <div className={`p-3 rounded-xl bg-gradient-to-br ${getTypeBgColor(item.type)} shadow-lg flex-shrink-0`}>
-                          {item.type === 'pdf' && <FileText className="h-5 w-5 text-white" />}
-                          {item.type === 'image' && <ImageIcon className="h-5 w-5 text-white" />}
-                          {item.type === 'url' && <LinkIcon className="h-5 w-5 text-white" />}
-                          {item.type === 'text' && <BookOpen className="h-5 w-5 text-white" />}
+            <div className="space-y-3">
+              {knowledge.map((item) => {
+                const TypeIcon = getTypeIcon(item.type)
+                const isExpanded = expandedId === item.id
+                return (
+                  <div
+                    key={item.id}
+                    className="bg-white rounded-xl border border-slate-200 overflow-hidden"
+                  >
+                    <div className="p-4">
+                      <div className="flex items-start gap-3">
+                        <div className={cn('p-2 rounded-lg', getTypeColor(item.type))}>
+                          <TypeIcon className="h-4 w-4" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${getTypeColor(item.type)}`}>
-                              {item.type.toUpperCase()}
+                            <span className={cn('px-2 py-0.5 rounded text-xs font-medium', getTypeColor(item.type))}>
+                              {item.type}
                             </span>
-                            <span className="text-xs text-gray-400 flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
+                            <span className="text-xs text-slate-400">
                               {new Date(item.createdAt).toLocaleDateString('tr')}
                             </span>
                           </div>
-                          <h3 className="text-gray-800 font-semibold truncate">{item.title}</h3>
-                          <p className="text-sm text-gray-500 truncate">{item.source}</p>
+                          <h3 className="font-medium text-slate-900">{item.title}</h3>
+                          <p className="text-sm text-slate-500 truncate">{item.source}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setExpandedId(isExpanded ? null : item.id)}
+                            className="h-8 px-2 text-slate-500 hover:text-slate-900"
+                          >
+                            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDelete(item.id)}
+                            className="h-8 px-2 text-slate-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
-                          className="h-9 px-3 border-gray-200 text-gray-600 hover:text-orange-600 hover:border-orange-200"
-                        >
-                          <Eye className="h-4 w-4 mr-1" />
-                          {expandedId === item.id ? (
-                            <ChevronUp className="h-4 w-4" />
-                          ) : (
-                            <ChevronDown className="h-4 w-4" />
-                          )}
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDelete(item.id)}
-                          className="h-9 px-3 border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Preview */}
-                    {expandedId !== item.id && (
-                      <div className="mt-3 pl-16">
-                        <p className="text-sm text-gray-600 line-clamp-2">
-                          {item.content.slice(0, 300)}...
+                      {!isExpanded && (
+                        <p className="mt-2 text-sm text-slate-600 line-clamp-2 pl-11">
+                          {item.content.slice(0, 200)}...
                         </p>
+                      )}
+                    </div>
+                    {isExpanded && (
+                      <div className="border-t border-slate-100 bg-slate-50 p-4">
+                        <div className="bg-white rounded-lg p-4 border border-slate-200 max-h-80 overflow-y-auto">
+                          <pre className="text-sm text-slate-700 whitespace-pre-wrap font-sans">
+                            {item.content}
+                          </pre>
+                        </div>
                       </div>
                     )}
                   </div>
-
-                  {/* Expanded Content */}
-                  {expandedId === item.id && (
-                    <div className="border-t border-gray-100 bg-gray-50 p-5">
-                      <div className="flex items-center gap-2 mb-3">
-                        <Sparkles className="h-4 w-4 text-orange-500" />
-                        <span className="text-sm font-medium text-gray-700">Icerik Ozeti</span>
-                        <span className="text-xs text-gray-400">({item.content.length.toLocaleString()} karakter)</span>
-                      </div>
-                      <div className="bg-white rounded-xl p-4 border border-gray-200 max-h-96 overflow-y-auto">
-                        <pre className="text-sm text-gray-700 whitespace-pre-wrap font-sans leading-relaxed">
-                          {item.content}
-                        </pre>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>

@@ -11,9 +11,7 @@ import {
   ArrowRight,
   FileText,
   Image as ImageIcon,
-  TrendingUp,
   Activity,
-  Zap,
 } from 'lucide-react'
 
 interface Stats {
@@ -99,77 +97,68 @@ export default function DashboardPage() {
       label: 'Bilgi Tabani',
       value: stats.knowledgeCount,
       icon: BookOpen,
-      color: 'from-blue-500 to-blue-600',
-      shadowColor: 'shadow-blue-500/25',
-      description: 'kayitli dokuman',
+      color: 'bg-indigo-500',
     },
     {
       label: 'Analizler',
       value: stats.analysisCount,
       icon: Shield,
-      color: 'from-emerald-500 to-emerald-600',
-      shadowColor: 'shadow-emerald-500/25',
-      description: 'tamamlanan analiz',
+      color: 'bg-emerald-500',
     },
     {
       label: 'Chat Mesajlari',
       value: stats.chatCount,
       icon: MessageSquare,
-      color: 'from-violet-500 to-violet-600',
-      shadowColor: 'shadow-violet-500/25',
-      description: 'mesaj',
+      color: 'bg-cyan-500',
     },
     {
       label: 'Kritik Bulgular',
       value: stats.criticalFindings,
       icon: AlertTriangle,
-      color: 'from-red-500 to-red-600',
-      shadowColor: 'shadow-red-500/25',
-      description: 'yuksek seviye',
+      color: 'bg-red-500',
     },
   ]
 
   const quickActions = [
-    { href: '/chat', icon: MessageSquare, label: 'AI Chat', desc: 'Soru sor', color: 'orange' },
-    { href: '/analyze', icon: Shield, label: 'Analiz', desc: 'Request analizi', color: 'emerald' },
-    { href: '/knowledge', icon: FileText, label: 'PDF Yukle', desc: 'Dokuman ekle', color: 'blue' },
-    { href: '/knowledge', icon: ImageIcon, label: 'Gorsel Ekle', desc: 'Screenshot', color: 'violet' },
+    { href: '/chat', icon: MessageSquare, label: 'AI Chat', desc: 'Soru sor' },
+    { href: '/analyze', icon: Shield, label: 'Analiz', desc: 'HTTP analizi' },
+    { href: '/knowledge', icon: FileText, label: 'PDF Yukle', desc: 'Dokuman ekle' },
+    { href: '/knowledge', icon: ImageIcon, label: 'Gorsel Ekle', desc: 'Screenshot' },
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="p-8 bg-slate-50 min-h-screen">
+      <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">
-              Hos Geldin, {session?.user?.name || 'Admin'} 👋
+            <h1 className="text-2xl font-bold text-slate-900">
+              Hos Geldin, {session?.user?.name || 'Admin'}
             </h1>
-            <p className="text-gray-500 mt-1">GBrain Siber Guvenlik Asistani</p>
+            <p className="text-slate-500 mt-1">GBrain Siber Guvenlik Asistani</p>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium">
             <Activity className="h-4 w-4" />
             Sistem Aktif
           </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {statCards.map((stat) => (
             <div
               key={stat.label}
-              className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+              className="bg-white rounded-xl p-5 border border-slate-200"
             >
-              <div className="flex items-start justify-between">
+              <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
-                  <p className="text-3xl font-bold text-gray-800 mt-2">
+                  <p className="text-sm text-slate-500">{stat.label}</p>
+                  <p className="text-2xl font-bold text-slate-900 mt-1">
                     {loading ? '-' : stat.value}
                   </p>
-                  <p className="text-xs text-gray-400 mt-1">{stat.description}</p>
                 </div>
-                <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} shadow-lg ${stat.shadowColor}`}>
-                  <stat.icon className="h-6 w-6 text-white" />
+                <div className={`p-3 rounded-lg ${stat.color}`}>
+                  <stat.icon className="h-5 w-5 text-white" />
                 </div>
               </div>
             </div>
@@ -178,82 +167,75 @@ export default function DashboardPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Quick Actions */}
-          <div className="lg:col-span-1 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-2 mb-6">
-              <Zap className="h-5 w-5 text-orange-500" />
-              <h2 className="text-lg font-bold text-gray-800">Hizli Erisim</h2>
-            </div>
-            <div className="space-y-3">
+          <div className="bg-white rounded-xl p-5 border border-slate-200">
+            <h2 className="text-lg font-semibold text-slate-900 mb-4">Hizli Erisim</h2>
+            <div className="space-y-2">
               {quickActions.map((action) => (
                 <Link
                   key={action.label}
                   href={action.href}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 hover:bg-orange-50 border border-transparent hover:border-orange-200 transition-all group"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors group"
                 >
-                  <div className="p-2.5 rounded-lg bg-white shadow-sm group-hover:shadow-md transition-shadow">
-                    <action.icon className="h-5 w-5 text-gray-600 group-hover:text-orange-500 transition-colors" />
+                  <div className="p-2 rounded-lg bg-slate-100 group-hover:bg-indigo-100 transition-colors">
+                    <action.icon className="h-4 w-4 text-slate-600 group-hover:text-indigo-600 transition-colors" />
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-gray-800">{action.label}</p>
-                    <p className="text-xs text-gray-500">{action.desc}</p>
+                    <p className="text-sm font-medium text-slate-900">{action.label}</p>
+                    <p className="text-xs text-slate-500">{action.desc}</p>
                   </div>
-                  <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-indigo-600 transition-colors" />
                 </Link>
               ))}
             </div>
           </div>
 
           {/* Recent Analyses */}
-          <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-orange-500" />
-                <h2 className="text-lg font-bold text-gray-800">Son Analizler</h2>
-              </div>
+          <div className="lg:col-span-2 bg-white rounded-xl p-5 border border-slate-200">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-slate-900">Son Analizler</h2>
               <Link
                 href="/analyze"
-                className="text-sm text-orange-500 hover:text-orange-600 font-medium"
+                className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
               >
-                Tumu →
+                Tumu
               </Link>
             </div>
             {loading ? (
-              <div className="flex items-center justify-center py-12 text-gray-400">
+              <div className="flex items-center justify-center py-12 text-slate-400">
                 Yukleniyor...
               </div>
             ) : recentAnalyses.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Shield className="h-12 w-12 text-gray-300 mb-3" />
-                <p className="text-gray-500">Henuz analiz yapilmadi</p>
+                <Shield className="h-10 w-10 text-slate-300 mb-3" />
+                <p className="text-slate-500">Henuz analiz yapilmadi</p>
                 <Link
                   href="/analyze"
-                  className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors"
+                  className="mt-3 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
                 >
                   Ilk Analizi Baslat
                 </Link>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {recentAnalyses.map((analysis) => (
                   <Link
                     key={analysis.id}
                     href={`/analyze?id=${analysis.id}`}
-                    className="flex items-center gap-4 p-4 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors group"
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors"
                   >
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getSeverityColor(analysis.severity)}`}>
+                    <span className={`px-2 py-1 rounded text-xs font-medium ${getSeverityColor(analysis.severity)}`}>
                       {analysis.severity}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-800 truncate font-medium">
+                      <p className="text-sm text-slate-900 truncate">
                         {analysis.findings.summary ||
                           analysis.findings.vulnerabilities?.[0]?.name ||
                           'Analiz tamamlandi'}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-slate-500">
                         {analysis.source} • {new Date(analysis.createdAt).toLocaleDateString('tr')}
                       </p>
                     </div>
-                    <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-orange-500 transition-colors" />
                   </Link>
                 ))}
               </div>
@@ -262,26 +244,26 @@ export default function DashboardPage() {
         </div>
 
         {/* Burp Integration */}
-        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 text-white">
+        <div className="bg-slate-900 rounded-xl p-6">
           <div className="flex items-start gap-4">
-            <div className="p-3 bg-orange-500 rounded-xl">
-              <Shield className="h-6 w-6" />
+            <div className="p-3 bg-indigo-600 rounded-lg">
+              <Shield className="h-5 w-5 text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-bold mb-1">Burp Suite Entegrasyonu</h3>
-              <p className="text-gray-400 text-sm mb-4">
+              <h3 className="text-lg font-semibold text-white mb-1">Burp Suite Entegrasyonu</h3>
+              <p className="text-slate-400 text-sm mb-4">
                 Burp Suite ile otomatik zafiyet analizi yapin
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gray-700/50 rounded-xl p-4">
-                  <p className="text-xs text-gray-400 mb-1">Webhook URL</p>
-                  <code className="text-orange-400 text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="bg-slate-800 rounded-lg p-3">
+                  <p className="text-xs text-slate-500 mb-1">Webhook URL</p>
+                  <code className="text-cyan-400 text-sm">
                     {typeof window !== 'undefined' ? window.location.origin : ''}/api/burp-webhook
                   </code>
                 </div>
-                <div className="bg-gray-700/50 rounded-xl p-4">
-                  <p className="text-xs text-gray-400 mb-1">User ID</p>
-                  <code className="text-orange-400 text-sm">
+                <div className="bg-slate-800 rounded-lg p-3">
+                  <p className="text-xs text-slate-500 mb-1">User ID</p>
+                  <code className="text-cyan-400 text-sm">
                     {session?.user?.id || '-'}
                   </code>
                 </div>
